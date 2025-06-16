@@ -1,0 +1,68 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Quiz questions (list of dictionaries)
+questions = [
+    {
+        "question": "What is the capital of France?",
+        "options": ["London", "Paris", "Berlin", "Madrid"],
+        "answer": "Paris"
+    },
+    {
+        "question": "Which planet is known as the Red Planet?",
+        "options": ["Venus", "Mars", "Jupiter", "Saturn"],
+        "answer": "Mars"
+    },
+    {
+        "question": "What is 2 + 2?",
+        "options": ["3", "4", "5", "6"],
+        "answer": "4"
+    }
+]
+
+# Dictionary to store player scores
+player_scores = {}
+
+# Get player name
+player_name = input("Enter your name: ")
+player_scores[player_name] = 0  # Initialize score
+
+# Start quiz
+print(f"\nWelcome {player_name}! Let's begin the quiz.\n")
+
+for q in questions:
+    print(q["question"])
+    for i, option in enumerate(q["options"], 1):
+        print(f"{i}. {option}")
+    
+    # Get and validate answer
+    while True:
+        try:
+            answer = int(input("Your answer (1-4): "))
+            if 1 <= answer <= 4:
+                break
+            print("Please enter a number 1-4")
+        except ValueError:
+            print("Please enter a number")
+    
+    # Check answer
+    if q["options"][answer-1] == q["answer"]:
+        print("Correct!\n")
+        player_scores[player_name] += 1
+    else:
+        print(f"Wrong! The correct answer was {q['answer']}\n")
+
+# Show final score
+print(f"{player_name}, your final score is {player_scores[player_name]}/{len(questions)}")
+
+# Create and show bar chart
+df = pd.DataFrame(list(player_scores.items()), columns=["Player", "Score"])
+df.plot(kind='bar', x='Player', y='Score', legend=False)
+plt.title("Quiz Results")
+plt.ylabel("Score")
+plt.tight_layout()
+plt.show()
+
+# Export to CSV (optional)
+df.to_csv("quiz_score.csv", index=False)
+print("Score saved to quiz_score.csv")  
